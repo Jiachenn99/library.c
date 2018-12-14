@@ -24,14 +24,13 @@ typedef struct book Book;
 
 
 void addBook(struct library **head, struct library **current, Book newBook);
-void delBook3(struct library **headPtr, struct library **tailPtr, struct library *current, char *toDel, Book newBook);
 void delBook2(struct library **head, struct library **tailptr,char *delTitle);
-void delBook1(struct library **head, struct library **current, char *delTitle);
-void delBook(struct library **head, struct library *lastbook, char *delTitle);
+void delBook1(struct library **head, struct library *lastbook, char *delTitle);
+void delBook(struct library **head, struct library *headPtr, struct  library **current, char *delTitle);
 void bookSearch(struct library **head, char *searchTitle);
 void copybook(struct book* dest, struct book* source);
 void printList(struct library *node);
-
+void deleteBook(struct library **head,struct library *lastbook,char *title);
 
 
 int main()
@@ -72,13 +71,14 @@ int main()
                 printf("Entered the second case\n");
                 fscanf(lib, "%s", delPtr);
                 printf("Title to be deleted is: %s\n", delPtr);
-                delBook2(&headptr,&tailptr, delPtr);
+                delBook2(&headptr, &tailptr,delPtr);
                 printf("FUnction executed\n");
                
                 break;
             
             case 3:
             fscanf(lib, "%s", surprise);
+            bookSearch(&headptr, surprise);
             printf("Case 3");
             break;
         }
@@ -125,13 +125,12 @@ void delBook2(struct library **head, struct library **tail, char *delTitle)
     struct library *curr =NULL;
     struct library *temp =NULL;
 
-    if(strcmp((*head)->collection.title,delTitle) ==0)  //Case where head node is the one to delete
+    if(strcmp((*head)->collection.title,delTitle) ==0)
     {
         temp = (*head);
         (*head) = (*head) -> next;
         free(temp);
         return;
-
     }
 
     else
@@ -148,23 +147,17 @@ void delBook2(struct library **head, struct library **tail, char *delTitle)
 
         if(curr->next != NULL && strcmp(curr-> collection.title, delTitle) == 0 )
         {
-            temp = curr;
-            prev = temp -> next;
+            temp->collection = curr->collection;
+            prev->collection = temp -> next->collection;
             free(temp);
 
-        }
-        else //if curr->next == null
-        {
-            temp = curr;
-            prev = prev ->next;
-            free(temp);
         }
  
     }
-    
-}
 
-void delBook(struct library **head, struct library *lastbook, char *delTitle)
+}
+/*
+void delBook1(struct library **head, struct library *lastbook, char *delTitle)
 {
     struct library *temp1 = (*head);
     struct library *lastNode = (*head);
@@ -181,13 +174,12 @@ void delBook(struct library **head, struct library *lastbook, char *delTitle)
     {
         struct library *temp2 = temp1->next;
         temp1 ->next = temp2->next;
-        free(temp2);
     }
-    //When found the book with title
 
     
 }
-/*
+*/
+
 void delBook(struct library **head, struct library *headPtr, struct  library **current, char *delTitle)
 {
     struct library *searchDel; //To traverse the list
@@ -237,41 +229,12 @@ void delBook(struct library **head, struct library *headPtr, struct  library **c
 
 
 }
-*/
 
-
-void deleteBook(struct library **head,struct library *lastbook,char title[49],int num)//function to delete book
-{
-    struct library *tail,*temp,*tail2;
-    tail=(*head);
-    tail2=(*head);
-    while(strcmp(tail->collection.title,title)!=0)//find the position of book wanted to delete
-    {
-        tail=tail->next;
-    }
-
-    lastbook->num_books=num;//number of books updated           
-    copybook(&tail->collection,&lastbook->collection);//copy the last book to the position of book deleted
-    while(tail2->next!=lastbook)//find the position of second last book
-    {
-        tail2=tail2->next;
-    }
-    while(tail->next!=NULL)//find the position of last book
-    {
-        tail=tail->next;
-    }
-    lastbook=tail2;//assign last book as second last book
-    tail2->next=NULL;//declare last book as NULL
-    FILE *fptr2=fopen("output.txt","a");
-    fprintf(fptr2,"The book %s has been removed from the library.\n\n",title);//book deleted is recorded into the output.txt
-}
 
 void bookSearch(struct library **head, char *searchTitle)
 {
     // 
 }
-
-
 
 
 void copybook(struct book* dest, struct book* source)

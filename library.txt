@@ -3,7 +3,7 @@
 1 Intro_to_C_Programming King Computer_Science
 3 Huckleberry_Finn
 1 Huckleberry_Finn TWAIN FICTION
-2 Intro_to_C_Programming
+2 Huckleberry_Finn
 1 Guns,Germs,Steel Diamond Anthropology
 1 Java5.0 Cohoon Computer_Science
 2 Java5.0
