@@ -24,11 +24,10 @@ typedef struct book Book;
 
 
 void addBook(struct library **head, struct library **current, Book newBook);
-void delBook2(struct library **head, struct library **tailptr,char *delTitle);
+void delBook2(struct library **head, struct library *current,char *delTitle);
 void delBook1(struct library **head, struct library *lastbook, char *delTitle);
-void delBook(struct library **head, struct library *headPtr, struct  library **current, char *delTitle);
 void bookSearch(struct library **head, char *searchTitle);
-void copybook(struct book* dest, struct book* source);
+void copyBook(struct book *dest, struct book *source);
 void printList(struct library *node);
 void deleteBook(struct library **head,struct library *lastbook,char *title);
 
@@ -71,7 +70,7 @@ int main()
                 printf("Entered the second case\n");
                 fscanf(lib, "%s", delPtr);
                 printf("Title to be deleted is: %s\n", delPtr);
-                delBook2(&headptr, &tailptr,delPtr);
+                delBook2(&headptr,headptr,delPtr);
                 printf("FUnction executed\n");
                
                 break;
@@ -82,8 +81,7 @@ int main()
             printf("Case 3");
             break;
         }
-        printf("From head: %s\n", headptr->collection.title );
-        printf("At tail: %s\n", tailptr ->collection);
+        printList(headptr);
         puts("");
     }
 
@@ -117,43 +115,41 @@ void addBook(struct library **head, struct library **current, Book newBook)
     (*head)->num_books++;
 }
 
-
-//Add a if condition in the case that the last node is a null
-void delBook2(struct library **head, struct library **tail, char *delTitle)
+void delBook2(struct library **head, struct library *curr, char *delTitle)
 {
-    struct library *prev=(*head);
-    struct library *curr =NULL;
-    struct library *temp =NULL;
+   
+    struct library *prev;
+    struct library *temp;
+    struct library *last;
 
-    if(strcmp((*head)->collection.title,delTitle) ==0)
+    while(curr != NULL)
     {
-        temp = (*head);
-        (*head) = (*head) -> next;
-        free(temp);
-        return;
+        if(curr ->next == NULL)
+        {
+            last = curr; //Last node
+        }
+        curr = curr ->next;
     }
 
-    else
-    {
-        prev = (*head);
-        curr = (*head) -> next;
 
-        while(curr != NULL && (strcmp(curr ->collection.title, delTitle) != 0))
+    while(curr != NULL)
+    {
+        if(strcmp(curr->collection.title , delTitle) !=0)
         {
             prev = curr;
-            curr = curr->next;
-            
+            curr = curr ->next;
         }
 
-        if(curr->next != NULL && strcmp(curr-> collection.title, delTitle) == 0 )
+       
+
+        if(strcmp(curr->collection.title, delTitle) ==0) //If found the element
         {
-            temp->collection = curr->collection;
-            prev->collection = temp -> next->collection;
-            free(temp);
-
+            curr ->collection = last->collection;
+            last = NULL;
         }
- 
     }
+
+    
 
 }
 /*
@@ -180,64 +176,33 @@ void delBook1(struct library **head, struct library *lastbook, char *delTitle)
 }
 */
 
-void delBook(struct library **head, struct library *headPtr, struct  library **current, char *delTitle)
-{
-    struct library *searchDel; //To traverse the list
-    struct library *prev; //used to point to last element in linked list
-    struct library *lastNode;
-    
-
-    searchDel = (*head); //Assigning it to first node (head)
-    prev = (*head); //Used to keep track of the prev node
-
-    //Find the last element of the linked list and assign it to another pointer
-    while(searchDel->next != NULL)
-    {
-        if(searchDel -> next == NULL)
-        {
-            (*current) = searchDel->next;
-        }
-        prev = searchDel; //This acts as the prev node from searchDel(current node)
-        searchDel = searchDel -> next;
-    }
-
-    if(searchDel == headPtr)
-        {
-            headPtr = NULL;
-        }
-        else
-        {
-            // Disconnects the link of second last node with last node 
-            prev->next = NULL;
-        }
-        
-
-    struct book *lastLibraryBook = &(prev -> collection);
-    printf("The last book is %s\n",(*lastLibraryBook).title);
-
-
-    //Searching for the element to delete
-    //Use strcmp
-    while(strcmp(searchDel->collection.title, delTitle) != 0) //while not a match, continue executing the condition in the loop
-    {   
-        if(strcmp((*current) ->collection.title, delTitle) == 0) //If matches, override the info
-        {
-            (*current)->collection = prev->collection;
-        }
-        
-    }  (*current) = (*current)-> next; //Keep going to the next element until it is found
-
-
-}
-
 
 void bookSearch(struct library **head, char *searchTitle)
 {
-    // 
+    
 }
 
 
-void copybook(struct book* dest, struct book* source)
+void copyBook(struct book *dest, struct book *source)
 {
     *dest = *source;
+}
+
+void printList(struct library *node)
+{
+    struct library *move = node;
+    while(move != NULL)
+    {
+        printf("The list is %s \n", move->collection.title);
+        move = move ->next;
+
+        if(move == NULL)
+        {
+            printf("null\n");
+        }
+    }
+    
+   
+    
+   
 }
